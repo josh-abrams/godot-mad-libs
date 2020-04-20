@@ -1,14 +1,6 @@
 extends Control
 
 var player_words = []
-#var template = [{
-#		"prompts" : ["a name", "a noun", "an expletive"],
-#		"story" : "%s is the biggest %s I've ever seen. %s!"
-#		},
-#		{
-#		"prompts" : ["an adjective", "a noun", "a type of beer"],
-#		"story" : "Once upon a time there was a %s %s who drank a lot of %s."
-#		}]
 var current_story
 
 onready var PlayerText = $VBoxContainer/HBoxContainer/PlayerText
@@ -21,23 +13,26 @@ func _ready():
 	PlayerText.grab_focus()
 
 func set_current_story():
+	var stories = get_from_json("StoryBook.json")
 	randomize()
-#	current_story = template[randi() % template.size()]
-	var stories = $StoryBook.get_child_count()
-	var selected_story = randi() % stories
-	current_story.prompts = $StoryBook.get_child(selected_story).prompts
-	current_story.story = $StoryBook.get_child(selected_story).story
+	current_story = stories[randi() % stories.size()]
+
+func get_from_json(filename):
+	var file = File.new()
+	file.open(filename, File.READ)
+	var text = file.get_as_text()
+	var data = parse_json(text)
+	file.close()
+	return data
 
 func _on_PlayerText_text_entered(new_text):
 	add_to_player_words()
-
 
 func _on_TextureButton_pressed():
 	if is_story_done():
 		get_tree().reload_current_scene()
 	else:
 		add_to_player_words()
-
 
 func add_to_player_words():
 	player_words.append(PlayerText.text)
@@ -61,7 +56,7 @@ func prompt_player():
 
 func change_confirm_label():
 	ConfirmButtonText.text = "Woo!"
-
+	
 func end_game():
 	PlayerText.queue_free()
 	change_confirm_label()

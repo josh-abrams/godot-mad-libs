@@ -1,0 +1,8 @@
+[{  
+    "prompts" : ["a name", "a noun", "an expletive"],
+   	"story" : "%s is the biggest %s I've ever seen. %s!"
+},
+{
+    "prompts" : ["an adjective", "a noun", "a type of beer"],
+    "story" : "Once upon a time there was a %s %s who drank a lot of %s."
+}]
