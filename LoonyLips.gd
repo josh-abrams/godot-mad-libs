@@ -1,18 +1,28 @@
 extends Control
 
 var player_words = []
-var current_story = {
+var template = [{
 		"prompts" : ["a name", "a noun", "an expletive"],
-		"story": "%s is the biggest %s I've ever seen. %s!"
-		}
+		"story" : "%s is the biggest %s I've ever seen. %s!"
+		},
+		{
+		"prompts" : ["an adjective", "a noun", "a type of beer"],
+		"story" : "Once upon a time there was a %s %s who drank a lot of %s."
+		}]
+var current_story
 
 onready var PlayerText = $VBoxContainer/HBoxContainer/PlayerText
 onready var DisplayText = $VBoxContainer/DisplayText
 onready var ConfirmButtonText = $VBoxContainer/HBoxContainer/ButtonLabel
 
-func _ready():	
+func _ready():
+	set_current_story()
 	check_player_words_length()
 	PlayerText.grab_focus()
+
+func set_current_story():
+	randomize()
+	current_story = template[randi() % template.size()]
 
 func _on_PlayerText_text_entered(new_text):
 	add_to_player_words()
